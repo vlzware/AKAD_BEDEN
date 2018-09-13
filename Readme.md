@@ -1,0 +1,1 @@
+## Eigene Arbeiten vom Studium "Digital Engineering und Angewandte Informatik"
