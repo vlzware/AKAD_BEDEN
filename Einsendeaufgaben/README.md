@@ -1,0 +1,2 @@
+- Das .rtf Format für die Ensendeaufgaben ist problematisch. Man wird gezwungen Windows und Word zu benutzen. (Wordpad kann die Dateien öffnen, aber das Hack für die Bilder funktioniert da nicht.)
+- Wenn man Bilder in der Datei hat, wächst die Größe enorm und später kann evtl. nicht geöffnet werden. Lösung dafür ist in der Datei "Document file size increase.." von <a href="https://support.microsoft.com/en-us/help/224663/document-file-size-increases-with-emf-png-gif-or-jpeg-graphics-in-word">Microsoft Help</a>.
