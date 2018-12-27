@@ -1,0 +1,134 @@
+<?php
+session_start();
+require_once "helpers.php";
+
+$check = check_user(isset($_SESSION["id"])? $_SESSION["id"] : false);
+$user_is_admin = $check['user_is_admin'];
+$logged_user = $check['logged_user'];
+
+/* user not logged-in/locked ? */
+if ($check['user_locked']) {
+    header("location: " .HOME);
+    exit;
+}
+
+/* properly called? */
+$msg_id = -1;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $msg_id = $_POST["msg_id"];
+} else {
+    if (!isset($_GET["msg_id"]) || !ctype_digit($_GET["msg_id"])) {
+        header("location: " .HOME);
+        exit;
+    }
+    $msg_id = $_GET["msg_id"];
+}
+
+$thread_id = -1;
+$thread_name = "";
+$thread_locked = 1;
+$msg_user_id = -1;
+$msg_body = $msg_body_err = "";
+
+$sql = "SELECT thread.id , thread.name , thread.locked, msg.user_id, msg.body FROM msg
+        INNER JOIN thread ON msg.thread_id=thread.id WHERE msg.id=$msg_id";
+$result = $mysqli->query($sql);
+if ($result->num_rows > 0) {
+    $row = mysqli_fetch_row($result);
+    $thread_id = $row[0];
+    $thread_name = $row[1];
+    $thread_locked = $row[2];
+    $msg_user_id = $row[3];
+    $msg_body = $row[4];
+} else {
+    header("location: " .HOME);
+    exit;
+}
+
+/* check permissions */
+if ((!$user_is_admin)
+        && ($thread_locked || ($_SESSION["id"] != $msg_user_id))) {
+    header("location: " .HOMEDIR. "viewthread/?id=$thread_id");
+    exit;
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $msg_body = $_POST["msg_body"];
+
+    /* body checks */
+    if (empty($msg_body)) {
+        $msg_body_err = "Ihre Nachricht darf nicht lehr sein.";
+    } elseif (strlen($msg_body) > MAXBODY) {
+        $msg_body_err = "Versuchen Sie es etwas knapper.";
+    }
+
+    /* no errors on input? */
+    if (empty($msg_body_err)) {
+        $sql = "UPDATE msg SET body=? WHERE id=?";
+        if (exec_sql($sql, [ $msg_body, $msg_id ], "si")) {
+            header("location: " .HOMEDIR. "viewthread.php/?id=$thread_id");
+            exit;
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <?php echo boilerplate_head('Nachricht bearbeiten'); ?>
+</head>
+<body>
+    <div id="header">
+        <h1><a class="nostyle" href="<?php echo HOME; ?>">Mein Forum</a></h1>
+        <p>Test-Forum zum Assignment "Forum" für DBA20 [AKAD]</p>
+    </div>
+
+    <div id="topnav">
+        <a id="btn_back" href="<?php echo HOMEDIR."viewthread.php/?id=$thread_id" ?>" class="btn btn-default btn-sm">[ Zurück ]</a>
+        <div class="curr_user">
+            Eingeloggt als <b><?php echo $logged_user; ?></b>.
+        </div>
+    </div>
+    <div id="new_thread" class="screen_middle">
+        <h2>Nachricht bearbeiten:</h2>
+        <form action="<?php echo HOMEDIR. "editmsg.php"; ?>" method="post">
+            <div class="form-group">
+                <label>Themenname</label>
+                <input type="text" name="thread_name" class="form-control" value="<?php echo $thread_name; ?>" disabled />
+            </div>
+
+            <div class="form-group <?php if (!empty($msg_body_err)) {echo "has-error";} ?>">
+                <label>Ihr Text</label>
+                <textarea rows="15" cols="80" name="msg_body" class="form-control"><?php echo $msg_body; ?></textarea>
+                <span class="help-block"><?php echo $msg_body_err; ?></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Los !" />
+            </div>
+
+            <input type="hidden" name="msg_id" value="<?php echo $msg_id; ?>" />
+        </form>
+    </div>
+
+    <hr class="footer_space"/>
+    <div id="footer">
+        Diese Webseite benutzt Cookies.<br />
+        <?php
+        echo "php: ";
+        echo phpversion();
+        echo " | ";
+        $result = $mysqli->query("SELECT @@version");
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            echo "sql: ";
+            echo $row["@@version"];
+        }
+        ?>
+        | <a href="http://getbootstrap.com">Bootstrap</a> v3.3.7
+    </div>
+
+</body>
+</html>

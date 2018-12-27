@@ -1,0 +1,256 @@
+body {
+    /* colors by materialpalette.com */
+    --dark: #455A64;
+    --light: #CFD8DC;
+    --primary: #607D8B;
+    --text: #FFFFFF;
+    --text-light: #757575;
+    --text-dark: #212121;
+    --borders: #BDBDBD;
+    --accent: #00BCD4;
+
+    font-family: Arial;
+    color: var(--text-dark);
+    padding: 5px;
+    background: white;
+}
+
+#header {
+    padding: 30px;
+    text-align: center;
+    color: var(--text-dark);
+    background: var(--primary);
+}
+
+#header h1 {
+    font-size: 40px;
+}
+
+#topnav {
+    overflow: hidden;
+    background-color: var(--dark);
+    margin-bottom: 20px;
+}
+
+.curr_user {
+    text-align: right;
+    color: var(--text);
+    padding: 10px 20px;
+}
+
+.curr_user .btn {
+    margin: 1px;
+    margin-left: 5px;
+}
+
+a {
+    text-decoration: underline;
+    color: var(--text-dark);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+table {
+    margin-top: 10px;
+    margin-bottom: 50px;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+td {
+    border: 1px var(--borders) solid;
+}
+
+th {
+    padding-bottom: 12px;
+    color: var(--text-light);
+    background-color: white;
+}
+
+.table_threads {
+    width: 70%;
+}
+
+.table_threads_short {
+    width: 60%;
+}
+
+.table_adv_controls {
+    width: 15px;
+}
+
+.table_starter {
+    width: 15%;
+}
+
+.table_last_entry {
+    width: 15%;
+}
+
+.table_view_user {
+    text-align: center;
+    width: 15%;
+    max-width: 150px;
+}
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.hint {
+    font-size: smaller;
+    margin-left: 20px;
+}
+
+.odd_rows tr:nth-child(odd) {
+    background-color: var(--light);
+}
+
+.even_rows tr:nth-child(even) {
+    background-color: var(--light);
+}
+
+#btn_new_thread, #btn_new_msg {
+    float: right;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+#btn_back {
+    position: absolute;
+    margin: 5px;
+}
+
+.dummy, .lock, .unlock, .trash, .check, .uncheck, .edit {
+    display: block;
+    margin: auto;
+    width: 12px;
+    height: 12px;
+}
+
+.edit {
+    background: url("edit.png") no-repeat;
+}
+
+.edit:hover {
+    background: url("edit_.png") no-repeat;
+}
+
+.lock, .unlock:hover {
+    background: url("lock.png") no-repeat;
+}
+
+.unlock, .lock:hover {
+    background: url("unlock.png") no-repeat;
+}
+
+.check, .uncheck:hover {
+    background: url("check.png") no-repeat;
+}
+
+.uncheck, .check:hover {
+    background: url("uncheck.png") no-repeat;
+}
+
+.trash {
+    background: url("trash.png") no-repeat;
+}
+
+.trash:hover {
+    background: url("totrash.png") no-repeat;
+}
+
+.screen_middle, hr {
+    width: 80%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.screen_middle_w {
+    max-width: 550px;
+}
+
+h1, h2, h3 {
+    margin: 30px auto;
+    text-align: center;
+}
+
+#new_thread {
+}
+
+#login {
+    width: 300px;
+    margin: auto;
+}
+
+#users {
+}
+
+#register {
+}
+
+.users_control {
+    max-width: 50px;
+}
+
+.users_pwd {
+    max-width: 200px;
+}
+
+.users_name {
+    max-width: 100px;
+    overflow: hidden;
+}
+
+.nostyle, .nostyle:hover {
+    text-decoration: none;
+    color: var(--text-dark);
+}
+
+.footer_space {
+    margin-top: 50px;
+    margin-bottom: 200px;
+}
+
+#footer {
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    background: var(--primary);
+    color: var(--text-dark);
+    position: fixed;
+    left: 0;
+    bottom: -25px;
+    width: 100%;
+}
+
+#footer:hover {
+    bottom: 0;
+}
+
+@media screen and (max-width: 800px) {
+    #header {
+        padding: 10px;
+    }
+    .screen_middle {
+        width: 100%;
+    }
+    #topnav {
+        margin-bottom: 0;
+    }
+    #header h1 {
+        font-size: 30px;
+    }
+}
