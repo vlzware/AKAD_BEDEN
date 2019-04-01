@@ -1,1 +1,1 @@
-## Eigene Arbeiten vom Studium "Digital Engineering und Angewandte Informatik"
+## Eigene Arbeiten zum Studium "Digital Engineering und Angewandte Informatik" in der <a href="https://www.akad.de/">AKAD Fernhochschule</a>

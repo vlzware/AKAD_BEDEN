@@ -1,4 +1,6 @@
-## Assignment zu SQF24
+## Assignment zu SQF24: Schlüsselqualifikationen für Studium und Beruf
+### Digital Engineering und Angewandte Informatik
+### AKAD University
 
 - **Einführung**
    - Problemstellung:                           50%

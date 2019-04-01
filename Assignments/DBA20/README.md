@@ -1,4 +1,6 @@
-## Assignment zu DBA20
+## Assignment zu DBA20: Datenbanksysteme
+### Digital Engineering und Angewandte Informatik
+### AKAD University
 
 - **Einführung**
    - Problemstellung:                           75%

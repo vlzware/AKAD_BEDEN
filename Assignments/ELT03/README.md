@@ -1,4 +1,6 @@
-## Assignment zu ELT03
+## Assignment zu ELT03: Digitaltechnik
+### Digital Engineering und Angewandte Informatik
+### AKAD University
 
 - **Einführung**
    - Problemstellung:                           75%

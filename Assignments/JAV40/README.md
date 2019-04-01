@@ -1,4 +1,6 @@
-## Assignment zu JAV40
+## Assignment zu JAV40: Programmieren in Java
+### Digital Engineering und Angewandte Informatik
+### AKAD University
 
 - **Einführung**
    - Problemstellung:                           75%
