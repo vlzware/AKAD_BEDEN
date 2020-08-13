@@ -30,5 +30,6 @@
 **Gesamtbewertung:** 42.0 von 60 Punkten, Note: 3.0 [Befriedigend]
 
 Kritikpunkt(e): alles...
+"Keine eigene Leistung"
 
-Widerspruch ist eingelegt.
+~~Widerspruch ist eingelegt.~~ Widerspruch wurde abgelehnt.
