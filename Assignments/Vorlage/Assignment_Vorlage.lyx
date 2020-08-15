@@ -1367,7 +1367,7 @@ Wieder römische Zahlen.
 LatexCommand bibtex
 btprint "btPrintCited"
 bibfiles "akad"
-options "apalike-german_AKAD"
+options "bibtotoc,apalike-german_AKAD"
 
 \end_inset
 

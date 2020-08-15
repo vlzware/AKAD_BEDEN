@@ -56,7 +56,6 @@
 %       Book, InProceedings, InCollection, Article, PhdThesis
 %       (with the amount of data as in akad.bib)
 %   BibTEX Reference: https://ctan.net/info/bibtex/tamethebeast/ttb_en.pdf
-%   (Note: this is a Major PITA!)
 %
 
 ENTRY
@@ -358,8 +357,8 @@ FUNCTION {format.number.series}
     { number empty$
         { series field.or.null }
         { output.state mid.sentence =
-            { "Nummer" }
-            { "Nummer" }
+            { "" }  % { "Nummer" }
+            { "" }  % { "Nummer" }
           if$
           number tie.or.space.connect
           series empty$
@@ -516,7 +515,7 @@ FUNCTION {article}
   format.title "title" output.check
   new.block
   crossref missing$
-    { journal emphasize "journal" output.check
+    { journal "journal" output.check
       format.vol.num.pages output
     }
     { format.article.crossref output.nonnull
