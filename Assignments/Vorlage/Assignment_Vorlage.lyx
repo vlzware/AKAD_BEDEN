@@ -103,7 +103,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "language=SQL,basicstyle={\smaller},basicstyle={\footnotesize\sffamily},captionpos=b"
+\listings_params "language=SQL,frame=leftline,basicstyle={\footnotesize\sffamily},numbers=left,captionpos=b,showstringspaces=false"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
