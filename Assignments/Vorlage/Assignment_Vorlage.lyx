@@ -103,7 +103,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "language=SQL,basicstyle={\smaller},basicstyle={\footnotesize\sffamily}"
+\listings_params "language=SQL,basicstyle={\smaller},basicstyle={\footnotesize\sffamily},captionpos=b"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -331,6 +331,41 @@ Damit das im Inhaltsverzeichnis erscheint
 \end_layout
 
 \begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\begin_inset CommandInset toc
+LatexCommand lstlistoflistings
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Verzeichnis der Programmlistings}
+\backslash
+stepcounter{romannum}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Damit das im Inhaltsverzeichnis erscheint
+\end_layout
+
+\end_inset
+
+
 \begin_inset Newpage newpage
 \end_inset
 
@@ -868,6 +903,13 @@ Programmlisting
 \end_layout
 
 \begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Note Note
 status open
 
@@ -915,10 +957,16 @@ ToDo
 : vielleicht das auch auf Floats (Algorithm?) umstellen?
 \end_layout
 
+\begin_layout Plain Layout
+Siehe auch Settings/Advanced um einen Name dem Listing zu geben! Das spielt
+ dann Rolle beim Code-Verzeichnis.
+\end_layout
+
 \end_inset
 
 
 \begin_inset listings
+lstparams "extendedchars=true,caption={bla bla, bla},label=bla"
 inline false
 status open
 
@@ -929,7 +977,7 @@ INSERT INTO TAB150
 
 \begin_layout Plain Layout
 
-  VALUES ('VLADIMIR', 'ZHELEZAROV');
+  VALUES ('GÜNTHER', 'MÖLLER');
 \end_layout
 
 \begin_layout Plain Layout
@@ -1212,7 +1260,7 @@ Vgl.
  
 \begin_inset CommandInset citation
 LatexCommand citet
-key "daya2016microservices"
+key "the-github-graphql-api"
 literal "false"
 
 \end_inset
