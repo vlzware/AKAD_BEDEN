@@ -21,6 +21,9 @@
 % Datum z.B. 30.01.2020
 \usepackage[ddmmyyyy]{datetime}
 \renewcommand{\dateseparator}{.}
+
+\usepackage[font=small,labelfont=bf]{caption}
+\captionsetup[lstlisting]{singlelinecheck=on}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -28,9 +31,9 @@
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman "default" "default"
-\font_sans "default" "default"
-\font_typewriter "default" "default"
+\font_roman "lmodern" "default"
+\font_sans "lmss" "default"
+\font_typewriter "txtt" "default"
 \font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
@@ -103,7 +106,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "language=SQL,frame=leftline,basicstyle={\footnotesize\sffamily},numbers=left,captionpos=b,showstringspaces=false"
+\listings_params "language=SQL,basicstyle={\footnotesize\ttfamily\setstretch{1.0}},columns=fullflexible,captionpos=t,showstringspaces=false,frame=tb,framesep=10pt,numbers=left,numbersep=15pt,numberstyle={\footnotesize},tabsize=4"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -788,7 +791,19 @@ Language
 \begin_inset Quotes grd
 \end_inset
 
- (in Sinne von Programmiersprache) in Document/Settings/Listings einstellen;
+ (in Sinne von Programmiersprache) in Document/Settings/Listings einstellen.
+ Da auch bei Bedarf 
+\begin_inset Quotes gld
+\end_inset
+
+size
+\begin_inset Quotes grd
+\end_inset
+
+ ändern/löschen z.B.
+ 
+\backslash
+small
 \end_layout
 
 \begin_layout Plain Layout
@@ -1398,7 +1413,7 @@ value{romannum}}
 
 
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Wieder römische Zahlen.
@@ -1420,6 +1435,87 @@ options "bibtotoc,apalike-german_AKAD"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Hier bitte auf den korrekten Pfad von der BibTEX-Datei und von der Jabref-Datenb
+ank achten
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Anhang
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Anhang}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Anhang 1: Code-Struktur bei den untersuchten Projekten
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsection}{Anhang 1: Code-Struktur bei den untersuchten
+ Projekten}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+LYX is a document preparation system.
+ It is a tool for producing beautiful manu-scripts, publishable books, business
+ letters and proposals, and even poetry.
+ It isunlike most other “word processors” in the sense that it uses the
+ paradigm of amarkup language as its core editing style.
+ That means that when you type a sectionheader, you mark it as a “Section”,
+ not as “Bold, 17 pt type, left justified, 5 mm spacebelow”.
+ LYX takes care of the typesetting for you; so you deal only with concepts,not
+ with mechanics.
 \end_layout
 
 \end_body
