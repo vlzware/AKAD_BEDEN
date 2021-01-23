@@ -624,10 +624,10 @@ FUNCTION {incollection}
     { format.in.ed.booktitle "booktitle" output.check
       format.bvolume output
       format.number.series output
-      format.chapter.pages output
       new.sentence
 %      publisher "publisher" output.check
       address output
+      format.chapter.pages output
       format.edition output
     }
     { format.incoll.inproc.crossref output.nonnull
@@ -651,10 +651,10 @@ FUNCTION {inproceedings}
     { format.in.ed.booktitle "booktitle" output.check
       format.bvolume output
       format.number.series output
+      address output
       format.pages output
-      address output                                    % for apalike
       new.sentence                                      % there's no year
-      organization output                               % here so things
+%      organization output                               % here so things
 %      publisher output                                  % are simpler
     }
     { format.incoll.inproc.crossref output.nonnull
