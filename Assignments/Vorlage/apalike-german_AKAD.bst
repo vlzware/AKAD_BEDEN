@@ -651,8 +651,8 @@ FUNCTION {inproceedings}
     { format.in.ed.booktitle "booktitle" output.check
       format.bvolume output
       format.number.series output
-      address output
       format.pages output
+      address output
       new.sentence                                      % there's no year
 %      organization output                               % here so things
 %      publisher output                                  % are simpler
