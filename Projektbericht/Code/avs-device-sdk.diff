@@ -1,0 +1,526 @@
+diff --git a/SampleApp/include/SampleApp/ConsoleReader.h b/SampleApp/include/SampleApp/ConsoleReader.h
+index b70edc8..5d470b2 100644
+--- a/SampleApp/include/SampleApp/ConsoleReader.h
++++ b/SampleApp/include/SampleApp/ConsoleReader.h
+@@ -52,6 +52,12 @@ private:
+     /// A worker loop for the @c ConsoleReader.
+     void workerLoop();
+ 
++    /// A worker loop to watch the user button and the signal from the offline board
++    void workerLoopButtons();
++
++    /// A worker loop to watch the user button and the signal from the offline board
++    void workerLoopCin();
++
+     /// States for the @c ConsoleReader.
+     enum State {
+         /// In idle state that is not reading any input from console.
+@@ -80,14 +86,24 @@ private:
+     /// A conditional variable to wait and notify that data is available.
+     std::condition_variable m_isDataAvailable;
+ 
++    /// A conditional variable to wait for read from cin or the user buttons.
++    std::condition_variable m_isDataRead;
++
+     /// A conditional variable to wait and notify if a user requests a read from console.
+     std::condition_variable m_waitOnEvent;
+ 
+     /// This is used to store the last character read from console.
+     char m_lastCharRead;
+ 
+-    /// A thread to where the @c workerLoop() is run.
++    /// Temporary holder for the the char read from console or the signal from the user buttons.
++    char m_charRead;
++
++    /// A thread where the @c workerLoop() is run.
+     std::thread m_thread;
++
++    /// Two more threads to watch for button press and for activity on the console.
++    std::thread m_threadButtons;
++    std::thread m_threadCin;
+ };
+ 
+ }  // namespace sampleApp
+diff --git a/SampleApp/include/SampleApp/UIManager.h b/SampleApp/include/SampleApp/UIManager.h
+index 15c1334..c78b409 100644
+--- a/SampleApp/include/SampleApp/UIManager.h
++++ b/SampleApp/include/SampleApp/UIManager.h
+@@ -20,6 +20,9 @@
+ #include <memory>
+ #include <unordered_map>
+ #include <vector>
++#include <atomic>
++#include <chrono>
++#include <thread>
+ 
+ #include <acsdkSampleApplicationInterfaces/UIManagerInterface.h>
+ #include <AVSCommon/SDKInterfaces/AuthObserverInterface.h>
+@@ -61,6 +64,9 @@ class UIManager
+ public:
+     using DeviceAttributes = acsdkBluetoothInterfaces::BluetoothDeviceObserverInterface::DeviceAttributes;
+ 
++    // Destructor
++    ~UIManager();
++
+     /**
+      * Create a UIManager.
+      *
+@@ -483,6 +489,15 @@ private:
+ 
+     // The @c EndpointIdentifier of the default endpoint.
+     avsCommon::sdkInterfaces::endpoints::EndpointIdentifier m_defaultEndpointId;
++
++    /// A flag to indicate if @c UIManager is being shutdown.
++    std::atomic_bool m_shutDown;
++
++    /// A thread where the @c workerLoop() is run.
++    std::thread m_thread;
++
++    /// A worker loop for controlling the LEDs
++    void workerLoop();
+ };
+ 
+ }  // namespace sampleApp
+diff --git a/SampleApp/include/SampleApp/UserButton.h b/SampleApp/include/SampleApp/UserButton.h
+new file mode 100644
+index 0000000..9794a30
+--- /dev/null
++++ b/SampleApp/include/SampleApp/UserButton.h
+@@ -0,0 +1,16 @@
++/*
++ * LedControl.h
++ *
++ *  Created on: 24 Nov 2020
++ *      Author: vlzware
++ */
++
++#ifndef ALEXA_CLIENT_SDK_SAMPLEAPP_INCLUDE_SAMPLEAPP_USERBUTTON_H_
++#define ALEXA_CLIENT_SDK_SAMPLEAPP_INCLUDE_SAMPLEAPP_USERBUTTON_H_
++
++#include <wiringPi.h>
++#define BUTTON_TAP 0 		// GPIO 17 - button on the ReSpeaker Hat
++#define BUTTON_EASYVR 26 	// GPIO 12 - signal from EasyVR over the J4 Grove connector
++
++#endif /* ALEXA_CLIENT_SDK_SAMPLEAPP_INCLUDE_SAMPLEAPP_USERBUTTON_H_ */
++
+diff --git a/SampleApp/include/SampleApp/UserInputManager.h b/SampleApp/include/SampleApp/UserInputManager.h
+index 38fb682..52d93df 100644
+--- a/SampleApp/include/SampleApp/UserInputManager.h
++++ b/SampleApp/include/SampleApp/UserInputManager.h
+@@ -126,6 +126,8 @@ private:
+      */
+     void settingsMenu();
+ 
++    void boolSettingMenu(std::function<void(bool)> setFunction);
++
+     /**
+      * Dynamic endpoint modification Menu.
+      */
+diff --git a/SampleApp/src/CMakeLists.txt b/SampleApp/src/CMakeLists.txt
+index 6edd863..0483735 100644
+--- a/SampleApp/src/CMakeLists.txt
++++ b/SampleApp/src/CMakeLists.txt
+@@ -81,6 +81,9 @@ target_link_libraries(LibSampleApp
+         InterruptModel
+         "${PORTAUDIO_LIB_PATH}")
+ 
++find_library(wiringPi_LIB wiringPi)
++target_link_libraries(LibSampleApp ${wiringPi_LIB})
++
+ if (ACS_UTILS)
+     target_link_libraries(LibSampleApp acsdkACSSampleApplicationOptions)
+ else()
+diff --git a/SampleApp/src/ConsoleReader.cpp b/SampleApp/src/ConsoleReader.cpp
+index c68672f..38c5729 100644
+--- a/SampleApp/src/ConsoleReader.cpp
++++ b/SampleApp/src/ConsoleReader.cpp
+@@ -17,6 +17,7 @@
+ 
+ #include "SampleApp/ConsolePrinter.h"
+ #include "SampleApp/ConsoleReader.h"
++#include "SampleApp/UserButton.h"
+ 
+ namespace alexaClientSDK {
+ namespace sampleApp {
+@@ -24,8 +25,10 @@ namespace sampleApp {
+ /// Time to wait for if there's a pending read request from the user.
+ static const std::chrono::milliseconds READ_REQUEST_PENDING_TIMEOUT{100};
+ 
+-ConsoleReader::ConsoleReader() : m_state{IDLE}, m_shutDown{false}, m_lastCharRead{0} {
++ConsoleReader::ConsoleReader() : m_state{IDLE}, m_shutDown{false}, m_lastCharRead{0}, m_charRead{0} {
+     m_thread = std::thread(&ConsoleReader::workerLoop, this);
++    m_threadButtons = std::thread(&ConsoleReader::workerLoopButtons, this);
++    m_threadCin = std::thread(&ConsoleReader::workerLoopCin, this);
+ }
+ 
+ ConsoleReader::~ConsoleReader() {
+@@ -33,6 +36,13 @@ ConsoleReader::~ConsoleReader() {
+     if (m_thread.joinable()) {
+         m_thread.join();
+     }
++    if (m_threadButtons.joinable()) {
++        m_threadButtons.join();
++    }
++    // TODO: find a more elegant way to stop reading from cin
++    if (m_threadCin.joinable()) {
++    	std::terminate();
++    }
+ }
+ 
+ bool ConsoleReader::read(const std::chrono::milliseconds timeout, char* data) {
+@@ -57,7 +67,6 @@ bool ConsoleReader::read(const std::chrono::milliseconds timeout, char* data) {
+ 
+ void ConsoleReader::workerLoop() {
+     while (!m_shutDown) {
+-        char tempChar;
+         std::unique_lock<std::mutex> lock(m_mutex);
+         if (m_waitOnEvent.wait_for(lock, READ_REQUEST_PENDING_TIMEOUT, [this] {
+                 return m_shutDown || State::PENDING_REQUEST == m_state;
+@@ -66,17 +75,37 @@ void ConsoleReader::workerLoop() {
+                 break;
+             }
+             m_state = State::READING;
+-            lock.unlock();
+ 
+-            std::cin >> tempChar;
++            m_isDataRead.wait(lock);
+ 
+-            lock.lock();
+-            m_lastCharRead = tempChar;
++            m_lastCharRead = m_charRead;
+             m_state = State::DATA_READY;
+             m_isDataAvailable.notify_one();
+         }
+     }
+ }
+ 
++/* The "tap" condition can also be achieved by pressing the user button
++    or when a signal from the offline board arrives.
++    When this happens we just insert a 't' in the buffer, as if the user
++    typed it. */
++void ConsoleReader::workerLoopButtons() {
++    while (!m_shutDown) {
++		if ((digitalRead(BUTTON_TAP) == LOW) || (digitalRead(BUTTON_EASYVR) == LOW)) {
++			m_charRead = 't';
++			m_isDataRead.notify_one();
++			std::this_thread::sleep_for (std::chrono::milliseconds(2000));
++        }
++    }
++}
++
++void ConsoleReader::workerLoopCin() {
++    while (!m_shutDown) {
++        std::cin >> m_charRead;
++		m_isDataRead.notify_one();
++    }
++}
++
++
+ }  // namespace sampleApp
+ }  // namespace alexaClientSDK
+diff --git a/SampleApp/src/UIManager.cpp b/SampleApp/src/UIManager.cpp
+index 4afdad1..e664aa1 100644
+--- a/SampleApp/src/UIManager.cpp
++++ b/SampleApp/src/UIManager.cpp
+@@ -27,6 +27,7 @@
+ 
+ #include "SampleApp/ConsolePrinter.h"
+ #include "SampleApp/UIManager.h"
++#include "SampleApp/APA102pi.h"
+ 
+ /// String to identify log entries originating from this file.
+ static const std::string TAG("UIManager");
+@@ -585,6 +586,26 @@ static const std::string NETWORK_INFO_NAME = "NetworkInfo";
+ /// The index of the first option in displaying a list of options.
+ static const unsigned int OPTION_ENUM_START = 1;
+ 
++// Raspberry pins for SPI
++const std::uint8_t dataPin = 12;
++const std::uint8_t clockPin = 14;
++
++// Object to control the LEDs
++APA102<dataPin, clockPin> ledStrip;
++
++const std::uint16_t ledCount = 3;
++const std::uint8_t ledBrightness = 1; // max is 31
++const std::uint8_t ledBrightnessMax = 8; // this is used for the fade-effect
++const std::chrono::milliseconds ledSpeedBlink{135};
++const std::chrono::milliseconds ledSpeedFade{75};
++
++// This colors are used in the LED patterns
++rgb_color colorOn[ledCount] = {rgb_color(0, 0, 255), rgb_color(0, 0, 255), rgb_color(0, 0, 255)};
++rgb_color colorOff[ledCount] = {rgb_color(0, 0, 0), rgb_color(0, 0, 0), rgb_color(0, 0, 0)};
++rgb_color colorMove0[ledCount] = {rgb_color(0, 0, 100), rgb_color(0, 0, 255), rgb_color(0, 0, 255)};
++rgb_color colorMove1[ledCount] = {rgb_color(0, 0, 255), rgb_color(0, 0, 100), rgb_color(0, 0, 255)};
++rgb_color colorMove2[ledCount] = {rgb_color(0, 0, 255), rgb_color(0, 0, 255), rgb_color(0, 0, 100)};
++
+ std::shared_ptr<UIManager> UIManager::create(
+     const std::shared_ptr<avsCommon::sdkInterfaces::LocaleAssetsManagerInterface>& localeAssetsManager,
+     const std::shared_ptr<avsCommon::utils::DeviceInfo>& deviceInfo) {
+@@ -606,9 +627,19 @@ UIManager::UIManager(
+         m_authState{AuthObserverInterface::State::UNINITIALIZED},
+         m_connectionStatus{avsCommon::sdkInterfaces::ConnectionStatusObserverInterface::Status::DISCONNECTED},
+         m_localeAssetsManager{localeAssetsManager},
+-        m_defaultEndpointId{deviceInfo->getDefaultEndpointId()} {
++        m_defaultEndpointId{deviceInfo->getDefaultEndpointId()},
++		m_shutDown{false} {
++			m_thread = std::thread(&UIManager::workerLoop, this);
+ }
+ 
++UIManager::~UIManager() {
++	m_shutDown = true;
++	if (m_thread.joinable()) {
++		m_thread.join();
++	}
++}
++
++
+ static const std::string COMMS_MESSAGE =
+     "+----------------------------------------------------------------------------+\n"
+     "|                          Comms Options:                                    |\n"
+@@ -1187,5 +1218,40 @@ void UIManager::onActiveDeviceDisconnected(const DeviceAttributes& deviceAttribu
+     });
+ }
+ 
++void UIManager::workerLoop() {
++	while (!m_shutDown) {
++        switch (m_dialogState) {
++            case DialogUXState::IDLE:
++            	ledStrip.write(colorOff, ledCount, ledBrightness);
++                break;
++            case DialogUXState::THINKING:
++                ledStrip.write(colorMove0, ledCount, ledBrightness);
++                std::this_thread::sleep_for(ledSpeedBlink);
++                ledStrip.write(colorMove1, ledCount, ledBrightness);
++                std::this_thread::sleep_for(ledSpeedBlink);
++                ledStrip.write(colorMove2, ledCount, ledBrightness);
++                std::this_thread::sleep_for(ledSpeedBlink);
++                ledStrip.write(colorMove1, ledCount, ledBrightness);
++                std::this_thread::sleep_for(ledSpeedBlink);
++                break;
++            case DialogUXState::SPEAKING:
++                for (std::uint8_t i = 0; i <= ledBrightnessMax; i++) {
++                    ledStrip.write(colorOn, ledCount, i);
++                    std::this_thread::sleep_for(ledSpeedFade);
++                }
++                for (std::uint8_t i = ledBrightnessMax-1; i > 0; i--) {
++                    ledStrip.write(colorOn, ledCount, i);
++                    std::this_thread::sleep_for(ledSpeedFade);
++                }
++                break;
++            default:
++            	// std::cout << stateToString(m_dialogState) << std::endl;
++            	ledStrip.write(colorOn, ledCount, ledBrightness);
++                break;
++        }
++
++	}
++}
++
+ }  // namespace sampleApp
+ }  // namespace alexaClientSDK
+diff --git a/SampleApp/src/UserInputManager.cpp b/SampleApp/src/UserInputManager.cpp
+index b855956..5b6b143 100644
+--- a/SampleApp/src/UserInputManager.cpp
++++ b/SampleApp/src/UserInputManager.cpp
+@@ -332,6 +332,8 @@ SampleAppReturnCode UserInputManager::run() {
+         } else if (x == THUMBS_DOWN) {
+             m_interactionManager->playbackThumbsDown();
+         } else if (x == FIRMWARE_VERSION) {
++        	std::cout << "Not implemented!" << std::endl;
++        	continue;
+             std::string text;
+             std::getline(std::cin, text);
+             // If text is empty the user entered newline right after the command key.
+@@ -432,14 +434,18 @@ void UserInputManager::onCapabilitiesStateChange(
+ void UserInputManager::controlSpeaker() {
+     m_interactionManager->speakerControl();
+     char speakerChoice;
+-    std::cin >> speakerChoice;
++    //std::cin >> speakerChoice;
++    if (!readConsoleInput(&speakerChoice)) {
++        return;
++    }
+     if (SPEAKER_TYPES.count(speakerChoice) == 0) {
+         m_interactionManager->errorValue();
+     } else {
+         m_interactionManager->volumeControl();
+         ChannelVolumeInterface::Type speaker = SPEAKER_TYPES.at(speakerChoice);
+         char volume;
+-        while (std::cin >> volume && volume != 'q') {
++		//while (std::cin >> volume && volume != 'q') {
++        while (readConsoleInput(&volume) && volume != 'q') {
+             switch (volume) {
+                 case '1':
+                     m_interactionManager->adjustVolume(speaker, INCREASE_VOLUME);
+@@ -583,7 +589,10 @@ bool UserInputManager::confirmReset() {
+     m_interactionManager->confirmResetDevice();
+     char y;
+     do {
+-        std::cin >> y;
++        //std::cin >> y;
++        if (!readConsoleInput(&y)) {
++            break;
++        }
+         // Check the Setting which has to be changed.
+         switch (y) {
+             case 'Y':
+@@ -607,7 +616,10 @@ bool UserInputManager::confirmReauthorizeDevice() {
+     m_interactionManager->confirmReauthorizeDevice();
+     char y;
+     do {
+-        std::cin >> y;
++        //std::cin >> y;
++        if (!readConsoleInput(&y)) {
++            break;
++        }
+         // Check the Setting which has to be changed.
+         switch (y) {
+             case 'Y':
+@@ -627,9 +639,12 @@ bool UserInputManager::confirmReauthorizeDevice() {
+     return false;
+ }
+ 
+-void boolSettingMenu(std::function<void(bool)> setFunction) {
++void UserInputManager::boolSettingMenu(std::function<void(bool)> setFunction) {
+     char y;
+-    std::cin >> y;
++    //std::cin >> y;
++    if (!readConsoleInput(&y)) {
++    	return;
++    }
+     switch (y) {
+         case ENABLE:
+             setFunction(true);
+@@ -643,16 +658,23 @@ void boolSettingMenu(std::function<void(bool)> setFunction) {
+ }
+ 
+ void UserInputManager::settingsMenu() {
+-    m_interactionManager->settings();
++    m_interactionManager->settings();	// prints the settings menu
+     char y;
+-    std::cin >> y;
++    //std::cin >> y;
++    if (!readConsoleInput(&y)) {
++    	return;
++    }
+     // Check the Setting which has to be changed.
+     switch (y) {
+         case (char)SettingsValues::LOCALE: {
+             unsigned int optionSelected;
+-            m_interactionManager->locale();
+-            std::cin >> optionSelected;
+-            if (!std::cin.fail()) {
++            m_interactionManager->locale(); // print the list with supported locales
++            //std::cin >> optionSelected;
++            //if (!std::cin.fail()) {
++            char charSelected;
++            if (readConsoleInput(&charSelected)) {
++            	optionSelected = charSelected - '0';
++            	std::cout << "charSelected: " << charSelected << "; optionSelected: " << optionSelected << std::endl;
+                 auto numOfSupportedLocales = m_localeAssetsManager->getSupportedLocales().size();
+                 auto numOfSupportedLocaleCombinations = m_localeAssetsManager->getSupportedLocaleCombinations().size();
+                 if (optionSelected <= numOfSupportedLocales && optionSelected >= OPTION_ENUM_START) {
+@@ -668,9 +690,10 @@ void UserInputManager::settingsMenu() {
+                 } else if (OPTION_ENUM_QUIT == optionSelected) {
+                     return;
+                 } else {
+-                    m_interactionManager->errorValue();
++                    m_interactionManager->errorValue(); // print "Invalid Option"
+                 }
+             } else {
++            	return;
+                 m_interactionManager->errorValue();
+                 // Clear error flag on cin (so that future I/O operations will work correctly) in case of incorrect
+                 // input.
+@@ -679,6 +702,7 @@ void UserInputManager::settingsMenu() {
+                 // failure.
+                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+             }
++            return;
+             // Clear error flag on cin (so that future I/O operations will work correctly) in case of incorrect input.
+             std::cin.clear();
+             // Ignore anything else on the same line as the non-number so that it does not cause another parse failure.
+@@ -711,7 +735,10 @@ void UserInputManager::settingsMenu() {
+         case (char)SettingsValues::TIME_ZONE: {
+             m_interactionManager->timeZone();
+             char tzValue;
+-            std::cin >> tzValue;
++            //std::cin >> tzValue;
++            if (!readConsoleInput(&tzValue)) {
++            	return;
++            }
+             auto searchTz = TZ_VALUES.find(tzValue);
+             if (searchTz != TZ_VALUES.end()) {
+                 m_interactionManager->setTimeZone(searchTz->second);
+@@ -723,6 +750,8 @@ void UserInputManager::settingsMenu() {
+             return;
+         }
+         case (char)SettingsValues::NETWORK_INFO: {
++        	std::cout << "Not implemented!" << std::endl;
++        	return;
+             bool inNetworkMenu = true;
+             do {
+                 m_interactionManager->networkInfo();
+@@ -1003,7 +1032,8 @@ void UserInputManager::endpointControllerMenu() {
+ void UserInputManager::diagnosticsMenu() {
+     m_interactionManager->diagnosticsControl();
+     char input;
+-    while (std::cin >> input && input != 'q') {
++    //while (std::cin >> input && input != 'q') {
++	while (readConsoleInput(&input) && input != 'q') {
+         switch (input) {
+ #ifdef DEVICE_PROPERTIES
+             case 'p':
+@@ -1038,7 +1068,8 @@ void UserInputManager::diagnosticsMenu() {
+ void UserInputManager::devicePropertiesMenu() {
+     m_interactionManager->devicePropertiesControl();
+     char input;
+-    while (std::cin >> input && input != 'q') {
++    //while (std::cin >> input && input != 'q') {
++	while (readConsoleInput(&input) && input != 'q') {
+         switch (input) {
+             case 'p':
+                 m_interactionManager->showDeviceProperties();
+@@ -1059,7 +1090,8 @@ void UserInputManager::devicePropertiesMenu() {
+ void UserInputManager::deviceProtocolTracerMenu() {
+     m_interactionManager->deviceProtocolTraceControl();
+     char input;
+-    while (std::cin >> input && input != 'q') {
++    //while (std::cin >> input && input != 'q') {
++	while (readConsoleInput(&input) && input != 'q') {
+         switch (input) {
+             case 'e':
+                 m_interactionManager->setProtocolTraceFlag(true);
+@@ -1090,6 +1122,8 @@ void UserInputManager::deviceProtocolTracerMenu() {
+ }
+ 
+ void UserInputManager::audioInjectionMenu() {
++	std::cout << "Not implemented!" << std::endl;
++	return;
+     m_interactionManager->audioInjectionControl();
+     char input;
+     std::string absoluteFilePath;
+diff --git a/SampleApp/src/main.cpp b/SampleApp/src/main.cpp
+index 8780a6e..6afb256 100644
+--- a/SampleApp/src/main.cpp
++++ b/SampleApp/src/main.cpp
+@@ -16,6 +16,7 @@
+ #include "SampleApp/ConsoleReader.h"
+ #include "SampleApp/SampleApplication.h"
+ #include "SampleApp/SampleApplicationReturnCodes.h"
++#include "SampleApp/UserButton.h"
+ 
+ #ifdef DIAGNOSTICS
+ #include "SampleApp/SDKDiagnostics.h"
+@@ -52,6 +53,10 @@ bool usesOptStyleArgs(int argc, char* argv[]) {
+  * @return @c EXIT_FAILURE if the program failed to initialize correctly, else @c EXIT_SUCCESS.
+  */
+ int main(int argc, char* argv[]) {
++    wiringPiSetup();
++    pinMode(BUTTON_TAP, INPUT);
++    pinMode(BUTTON_EASYVR, INPUT);
++
+     std::vector<std::string> configFiles;
+     std::string pathToKWDInputFolder;
+     std::string logLevel;
