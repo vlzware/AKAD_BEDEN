@@ -2,29 +2,11 @@
 ### Digital Engineering und Angewandte Informatik
 ### AKAD University
 
-- **Einführung**
-   - Problemstellung:                           %
-   - Zielhierarchie:                            %
-   - Aufbau:                                    %
+Aus dem Gutachten:
 
-- **Grundlagen**
-   - Definitionen:                              %
-   - Grundlagen:                                %
-   - Literaturarbeit:                           %
+"6. Gesamteinschätzung
+Die Bearbeitung der Themenstellung hat einige Schwächen bei den Grundlagen, bei der
+Diskussion der Anforderungen und bei der Entwicklung einer Konzeption. Die prototypische
+Umsetzung wird jedoch detailliert und transparent diskutiert.
 
-- **Bearbeitung des Themas**
-   - Problembearbeitung:                        %
-   - Eigenständigkeit:                          %
-   - Ergebnisse:                                %
-
-- **Schluss**
-   - Zusammenfassung:                           %
-   - Kritische Reflexion:                       %
-
-- **Formalia**
-   - Sprache:                                   %
-   - Abbildungen, Tabellen und Verzeichnisse:   %
-   - Form der Zitierweise:                      %
-   - Gestaltung der Arbeit:                     %
-
-**Gesamtbewertung:** von 60 Punkten, Note: []
+Die Arbeit wird insgesamt wie folgt bewertet: Befriedigend [2,7]"
