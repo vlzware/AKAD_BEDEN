@@ -626,8 +626,8 @@ FUNCTION {incollection}
       format.number.series output
       new.sentence
 %      publisher "publisher" output.check
-      address output
       format.chapter.pages output
+      address output
       format.edition output
     }
     { format.incoll.inproc.crossref output.nonnull
