@@ -3,28 +3,28 @@
 ### AKAD University
 
 - **Einführung**
-   - Problemstellung:                           %
-   - Zielhierarchie:                            %
-   - Aufbau:                                    %
+   - Problemstellung:                          75 %
+   - Zielhierarchie:                           75 %
+   - Aufbau:                                   75 %
 
 - **Grundlagen**
-   - Definitionen:                              %
-   - Grundlagen:                                %
-   - Literaturarbeit:                           %
+   - Definitionen:                            100 %
+   - Grundlagen:                              100 %
+   - Literaturarbeit:                         100 %
 
 - **Bearbeitung des Themas**
-   - Problembearbeitung:                        %
-   - Eigenständigkeit:                          %
-   - Ergebnisse:                                %
+   - Problembearbeitung:                       75 %
+   - Eigenständigkeit:                         75 %
+   - Ergebnisse:                               75 %
 
 - **Schluss**
-   - Zusammenfassung:                           %
-   - Kritische Reflexion:                       %
+   - Zusammenfassung:                          75 %
+   - Kritische Reflexion:                      50 %
 
 - **Formalia**
-   - Sprache:                                   %
-   - Abbildungen, Tabellen und Verzeichnisse:   %
-   - Form der Zitierweise:                      %
-   - Gestaltung der Arbeit:                     %
+   - Sprache:                                  50 %
+   - Abbildungen, Tabellen und Verzeichnisse: 100 %
+   - Form der Zitierweise:                    100 %
+   - Gestaltung der Arbeit:                   100 %
 
-**Gesamtbewertung:** von 60 Punkten, Note: []
+**Gesamtbewertung:** 49.25 von 60 Punkten, Note: 2.0 [Gut]
