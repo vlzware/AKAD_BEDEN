@@ -27,6 +27,6 @@
    - Form der Zitierweise:                      75 %
    - Gestaltung der Arbeit:                    100 %
 
-**Gesamtbewertung:** 49.5 von 60 Punkten, Note: [Gut]
+**Gesamtbewertung:** 49.5 von 60 Punkten, Note: 2.0 [Gut]
 
 Kritikpunkt:
