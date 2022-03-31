@@ -1,4 +1,5 @@
 <?php
+ob_start(); /* TODO: investigate the session_start() at L54 */
 session_start();
 require_once "helpers.php";
 
@@ -24,7 +25,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 
     if (empty($password)) {
-        $password_err = "Bitte Password eingeben!";
+        $password_err = "Bitte Passwort eingeben!";
         $cred_err = true;
     }
 
@@ -73,7 +74,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -112,7 +112,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <input type="reset" class="btn btn-default" value="Reset" />
             </div>
 
-            <p><a href="mailto:dummy@dummy.dummy" title="">Benutzerkontro beantragen</a>.</p>
+            <p><a href="mailto:vladimir@vlzware.com" title="">Benutzerkontro beantragen</a>.</p>
         </form>
     </div>
 

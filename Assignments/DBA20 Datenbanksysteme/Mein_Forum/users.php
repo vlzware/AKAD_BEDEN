@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hash_password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "UPDATE user SET password=? WHERE username=?";
         if (exec_sql($sql, [$hash_password, $username], "ss")) {
-            echo "asdasdasdasd";
+            echo "Success!";
             /* TODO: some kind of confirmation */
         }
         header("location: " .HOMEDIR. "users.php");

@@ -30,3 +30,8 @@
 **Gesamtbewertung:** 53.0 von 60 Punkten, Note: 1.7 [Gut]
 
 Kritikpunkt: Formalia
+
+**UPDATE (31.03.2022):**
+  GearHost hat mit dem kostenlosen Hosting aufgehört - siehe https://www.gearhost.com/blog/free-cloudsite-plan-end-of-life
+  Das Forum habe ich zu 000webhost.com übertragen: https://dba20.000webhostapp.com/index.php
+  Die Regeln da besagen, dass ich mich oft anmelden muss um Aktivität zu zeigen. Weil das sehr unwahrscheinlich ist, muss ich nach andere Lösung denken.. Bis so eine Lösung gefunden ist, bleibt die Seite da.
