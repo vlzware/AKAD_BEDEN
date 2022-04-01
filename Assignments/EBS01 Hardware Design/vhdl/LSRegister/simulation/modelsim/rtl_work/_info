@@ -1,0 +1,146 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Users\Vladimir\Desktop\Projects\LSRegister\simulation\modelsim
+Ed_ff
+Z1 w1601123554
+Z2 DPx3 std 6 textio 0 22 5>J:;AW>W0[[dW0I6EN1Q0
+Z3 DPx4 ieee 14 std_logic_1164 0 22 5=aWaoGZSMWIcH0i^f`XF1
+Z4 dC:\Users\Vladimir\Desktop\Projects\LSRegister\simulation\modelsim
+Z5 8C:/Users/Vladimir/Desktop/Projects/LSRegister/D_FF.vhd
+Z6 FC:/Users/Vladimir/Desktop/Projects/LSRegister/D_FF.vhd
+l0
+L4
+VVCf4PEk7@1P`d??P=`G8o1
+Z7 OV;C;10.1d;51
+31
+Z8 !s108 1601394465.305000
+Z9 !s90 -reportprogress|300|-93|-work|work|C:/Users/Vladimir/Desktop/Projects/LSRegister/D_FF.vhd|
+Z10 !s107 C:/Users/Vladimir/Desktop/Projects/LSRegister/D_FF.vhd|
+Z11 o-93 -work work -O0
+Z12 tExplicit 1
+!s100 jN9fNj7^`dOO[F^9hEia;1
+!i10b 1
+Abehave
+R2
+R3
+DEx4 work 4 d_ff 0 22 VCf4PEk7@1P`d??P=`G8o1
+l10
+L9
+V@nkRGokYPIF^FSm6j5@3i1
+R7
+31
+R8
+R9
+R10
+R11
+R12
+!s100 1?aL]m?GY9hBkB0b]giUc0
+!i10b 1
+Elsregister
+Z13 w1601302156
+R2
+R3
+R4
+Z14 8C:/Users/Vladimir/Desktop/Projects/LSRegister/LSRegister.vhd
+Z15 FC:/Users/Vladimir/Desktop/Projects/LSRegister/LSRegister.vhd
+l0
+L4
+V6g[MWY7>b]@ZH^7kPoRY03
+R7
+31
+Z16 !s108 1601394464.859000
+Z17 !s90 -reportprogress|300|-93|-work|work|C:/Users/Vladimir/Desktop/Projects/LSRegister/LSRegister.vhd|
+Z18 !s107 C:/Users/Vladimir/Desktop/Projects/LSRegister/LSRegister.vhd|
+R11
+R12
+!s100 l?mIAKKgW^P7<6c@F^ehT1
+!i10b 1
+Abehave
+R2
+R3
+Z19 DEx4 work 10 lsregister 0 22 6g[MWY7>b]@ZH^7kPoRY03
+l32
+L13
+V8NTAdz8m;nI:JRLWgH?QV3
+R7
+31
+R16
+R17
+R18
+R11
+R12
+!s100 R_2aN^<nE?VZVzLlS`;EI3
+!i10b 1
+Emux
+Z20 w1601123569
+R2
+R3
+R4
+Z21 8C:/Users/Vladimir/Desktop/Projects/LSRegister/MUX.vhd
+Z22 FC:/Users/Vladimir/Desktop/Projects/LSRegister/MUX.vhd
+l0
+L4
+V=_CLK:momgZTQbgG;S<;e2
+R7
+31
+Z23 !s108 1601394465.960000
+Z24 !s90 -reportprogress|300|-93|-work|work|C:/Users/Vladimir/Desktop/Projects/LSRegister/MUX.vhd|
+Z25 !s107 C:/Users/Vladimir/Desktop/Projects/LSRegister/MUX.vhd|
+R11
+R12
+!s100 `5k_<DUCT>_CbG9OOJ0m<0
+!i10b 1
+Abehave
+R2
+R3
+DEx4 work 3 mux 0 22 =_CLK:momgZTQbgG;S<;e2
+l10
+L9
+VBOND]jBSCQOY6MVa>fU403
+R7
+31
+R23
+R24
+R25
+R11
+R12
+!s100 a=WCZ@X>XQ_iS?iZ;hB6d2
+!i10b 1
+Etb_lsregister
+Z26 w1601395750
+R2
+R3
+R4
+Z27 8C:/Users/Vladimir/Desktop/Projects/LSRegister/tb_LSRegister.vhd
+Z28 FC:/Users/Vladimir/Desktop/Projects/LSRegister/tb_LSRegister.vhd
+l0
+L4
+V1NLj_lfia^Ha`hA6K7z;m2
+!s100 7<=SzR2n9dlNbYcV7j@EP1
+R7
+32
+!i10b 1
+Z29 !s108 1601395795.049000
+Z30 !s90 -reportprogress|300|-work|work|-O0|C:/Users/Vladimir/Desktop/Projects/LSRegister/tb_LSRegister.vhd|
+Z31 !s107 C:/Users/Vladimir/Desktop/Projects/LSRegister/tb_LSRegister.vhd|
+Z32 o-work work -O0
+R12
+Abehave_lsr
+R19
+R2
+R3
+Z33 DEx4 work 13 tb_lsregister 0 22 1NLj_lfia^Ha`hA6K7z;m2
+l38
+L10
+VmK=l7I8[GO?_1XYhYVdQN3
+!s100 cWEa2BI>UeNi@Ze8_`Y2M2
+R7
+32
+!i10b 1
+R29
+R30
+R31
+R32
+R12

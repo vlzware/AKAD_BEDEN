@@ -1,0 +1,65 @@
+|LSRegister
+din => mux:LSR:0:gen_mux.b
+dout <= d_ff:LSR:2:gen_ff.q
+clk => d_ff:LSR:0:gen_ff.clk
+clk => d_ff:LSR:1:gen_ff.clk
+clk => d_ff:LSR:2:gen_ff.clk
+load => mux:LSR:0:gen_mux.sel
+load => mux:LSR:1:gen_mux.sel
+load => mux:LSR:2:gen_mux.sel
+reset_b => d_ff:LSR:0:gen_ff.rb
+reset_b => d_ff:LSR:1:gen_ff.rb
+reset_b => d_ff:LSR:2:gen_ff.rb
+parallel_in[0] => mux:LSR:0:gen_mux.a
+parallel_in[1] => mux:LSR:1:gen_mux.a
+parallel_in[2] => mux:LSR:2:gen_mux.a
+parallel_out[0] <= d_ff:LSR:0:gen_ff.q
+parallel_out[1] <= d_ff:LSR:1:gen_ff.q
+parallel_out[2] <= d_ff:LSR:2:gen_ff.q
+
+
+|LSRegister|mux:\LSR:0:gen_mux
+a => q.IN0
+b => q.IN0
+sel => q.IN1
+sel => q.IN1
+q <= q.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|LSRegister|d_ff:\LSR:0:gen_ff
+d => q~reg0.DATAIN
+clk => q~reg0.CLK
+rb => q~reg0.ACLR
+q <= q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|LSRegister|mux:\LSR:1:gen_mux
+a => q.IN0
+b => q.IN0
+sel => q.IN1
+sel => q.IN1
+q <= q.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|LSRegister|d_ff:\LSR:1:gen_ff
+d => q~reg0.DATAIN
+clk => q~reg0.CLK
+rb => q~reg0.ACLR
+q <= q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|LSRegister|mux:\LSR:2:gen_mux
+a => q.IN0
+b => q.IN0
+sel => q.IN1
+sel => q.IN1
+q <= q.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|LSRegister|d_ff:\LSR:2:gen_ff
+d => q~reg0.DATAIN
+clk => q~reg0.CLK
+rb => q~reg0.ACLR
+q <= q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
