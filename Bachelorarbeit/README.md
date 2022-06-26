@@ -10,3 +10,5 @@ Der Student bearbeitet die Themenstellung kompetent und zeigt, dass er sich ausf
 der Materie auseinandergesetzt hat.
 
 Die Arbeit wird insgesamt wie folgt bewertet: Sehr gut [1,3]"
+
+Die weitere Entwicklung von diesem Projekt findet <a href="https://github.com/vlzware/Wireghost">hier</a> statt.
