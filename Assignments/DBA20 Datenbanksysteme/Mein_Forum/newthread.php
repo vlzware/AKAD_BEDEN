@@ -16,8 +16,8 @@ $thread_body = $thread_body_err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $thread_name = $_POST["thread_name"];
-    $thread_body = $_POST["thread_body"];
+    $thread_name = strip_tags($_POST["thread_name"]);
+    $thread_body = htmlspecialchars($_POST["thread_body"]);
 
     /* name checks */
     if (empty($thread_name)) {

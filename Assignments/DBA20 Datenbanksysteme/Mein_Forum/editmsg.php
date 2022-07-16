@@ -54,7 +54,7 @@ if ((!$user_is_admin)
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $msg_body = $_POST["msg_body"];
+    $msg_body = htmlspecialchars($_POST["msg_body"]);
 
     /* body checks */
     if (empty($msg_body)) {

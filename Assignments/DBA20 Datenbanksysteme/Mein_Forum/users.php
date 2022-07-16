@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hash_password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "UPDATE user SET password=? WHERE username=?";
         if (exec_sql($sql, [$hash_password, $username], "ss")) {
-            echo "Success!";
+            //echo "Success!"; // this interferes with the redirection
             /* TODO: some kind of confirmation */
         }
         header("location: " .HOMEDIR. "users.php");
@@ -37,8 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $is_admin = isset($_POST['is_admin']);
     $update_password = isset($_POST["update_password"]);
 
-    if (empty($username)) {
-        $username_err = "Bitte Benutzername eingeben.";
+    if(!preg_match('/^\w{3,}$/', $username)) {
+        $username_err = "Bitte Benutzername eingeben (mind. 3 Symbole, erlaubte Zeichen: 0-9A-Za-z_ )";
 
     } else {
         $sql = "SELECT id FROM user WHERE username = ?";

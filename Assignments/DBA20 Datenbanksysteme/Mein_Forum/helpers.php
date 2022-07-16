@@ -76,7 +76,7 @@ function boilerplate_head($title) {
     $head .= '<meta charset="utf-8">';
     $head .= '<meta name="viewport" content="width=device-width, initial-scale=1">';
     $head .= '<meta name="description" content="Mein Forum [Test-Forum zum Assignment DBA20]">';
-    $head .= '<meta name="author" content="jelezarov.vladimir@gmail.com">';
+    $head .= '<meta name="author" content="vladimir@vlzware.com">';
 
     $head .= '<title>Mein Forum | ' .$title. '</title>';
 
