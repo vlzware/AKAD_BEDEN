@@ -42,6 +42,6 @@ Kritikpunkt: Formalia
 
 ***UPDATE (16.07.2022):***
 
-    Das Forum habe ich zum eigenen Hosting migriert: https://vlzware.com/forum
+Das Forum habe ich zum eigenen Hosting migriert: https://vlzware.com/forum
 
-    Zusätzlich habe ich manche Teile aktualisiert, damit die Benutzereingaben besser kontrolliert werden (bei der ersten Version konnte man HTML eintragen).
+Zusätzlich habe ich manche Teile aktualisiert, damit die Benutzereingaben besser kontrolliert werden (bei der ersten Version konnte man HTML eintragen).
