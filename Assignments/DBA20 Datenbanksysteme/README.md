@@ -39,3 +39,9 @@ Kritikpunkt: Formalia
   Das Forum habe ich zu 000webhost.com übertragen: https://dba20.000webhostapp.com/index.php
   
   Die Regeln da besagen, dass ich mich oft anmelden muss um Aktivität zu zeigen. Weil das sehr unwahrscheinlich ist, muss ich nach andere Lösung denken.. Bis so eine Lösung gefunden ist, bleibt die Seite da.
+
+***UPDATE (16.07.2022):***
+
+    Das Forum habe ich zum eigenen Hosting migriert: https://vlzware.com/forum
+
+    Zusätzlich habe ich manche Teile aktualisiert, damit die Benutzereingaben besser kontrolliert werden (bei der ersten Version konnte man HTML eintragen).
